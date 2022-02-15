@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import { ActivityIndicator } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -11,6 +11,7 @@ import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs'; // Pegar 
 
 import { categories } from '../../utils/categories';
 import { useTheme } from 'styled-components';
+import { useAuth } from '../../hooks/auth';
 
 import { HistoryCard } from '../../components/HistoryCard'
 
@@ -49,6 +50,8 @@ export function Resume() {
 	const [isLoading, setIsLoading] = useState(false);
 	const [selectedDate, setSelectedDate] = useState(new Date());
 	const [totalByCategories, setTotalByCategories] = useState<CategoryData[]>([])
+	
+	const { user } = useAuth();
 
 	const theme = useTheme();
 
@@ -62,7 +65,7 @@ export function Resume() {
 
 	async function loadData() {
 		setIsLoading(true);
-		const dataKey = '@gofinances:transactions';
+		const dataKey = `@gofinances:transactions_user:${user.id}`;
 		const response = await AsyncStorage.getItem(dataKey);
 		const responseFormatted = response ? JSON.parse(response) : [];
 

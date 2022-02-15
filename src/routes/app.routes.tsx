@@ -55,3 +55,5 @@ export function AppRoutes(){
         </Navigator>
     )
 }
+
+/** ROTA PRIVADA */

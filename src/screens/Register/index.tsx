@@ -8,6 +8,7 @@ import {
 
 import { useForm } from 'react-hook-form';
 import { useNavigation } from '@react-navigation/native';
+import { useAuth } from '../../hooks/auth';
 
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from "yup";
@@ -52,7 +53,7 @@ export function Register() {
 	const [transactionType, setTransactionType] = useState('')
 	const [categoryModalOpen, setCategoryModalOpen] = useState(false)
 
-	const dataKey = '@gofinances:transactions';
+	const { user } = useAuth();
 
 	const [category, setCategory] = useState({
 		key: 'category',
@@ -101,9 +102,9 @@ export function Register() {
 		}
 
 		try {
-			const data = await AsyncStorage.getItem(dataKey)
-			const currentData = data ? JSON.parse(data) : []
-			console.log(currentData)
+			const dataKey = `@gofinances:transactions_user:${user.id}`;
+			const data = await AsyncStorage.getItem(dataKey);
+			const currentData = data ? JSON.parse(data) : [];
 
 			const dataFormatted = [
 					...currentData,
@@ -130,8 +131,8 @@ export function Register() {
 
 	useEffect(() => {
 		async function loadData(){
-				const data = await AsyncStorage.getItem(dataKey);
-				console.log(JSON.parse(data!)) // !garante pro typescript que ele sempre vai encontrar o objeto data
+				const data = await AsyncStorage.getItem(`@gofinances:transactions_user:${user.id}`);
+				//console.log(JSON.parse(data!)) // !garante pro typescript que ele sempre vai encontrar o objeto data
 		}
 
 		loadData();
@@ -140,7 +141,6 @@ export function Register() {
 		// async function removeAll() {
 		//     await AsyncStorage.removeItem(dataKey);
 		// }
-
 		// removeAll();
 	}, [])
 
